@@ -1,66 +1,20 @@
-## Foundry
+# ZKP2P Periphery
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
-
-Foundry consists of:
-
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
-
-## Documentation
-
-https://book.getfoundry.sh/
+**Repository for periphery contracts of the core ZKP2P protocol**
 
 ## Usage
+1. Install [Foundry](https://book.getfoundry.sh/getting-started/installation)
+2. Clone repository
+3. Run `forge install` to build dependencies
+4. Run `forge test` to run tests
 
-### Build
+## Contracts
 
-```shell
-$ forge build
-```
+### NFTDescriptor
+External library that generates image SVG and other metadata for zkNFTs. Forked and modified from Uniswap V3's [NFTDescriptor](https://github.com/Uniswap/v3-periphery/blob/main/contracts/libraries/NFTDescriptor.sol).
 
-### Test
+### NFTSVG
+External library that generates image SVGs for zkNFTs. Forked and modified from Uniswap V3's [NFTSVG](https://github.com/Uniswap/v3-periphery/blob/main/contracts/libraries/NFTSVG.sol).
 
-```shell
-$ forge test
-```
-
-### Format
-
-```shell
-$ forge fmt
-```
-
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+### ProofOfVenmoNFT
+A zkNFT soulbound token that proves you are a Venmo user. Can only be minted once for each registered Ethereum address.
