@@ -12,7 +12,7 @@ contract ProofOfVenmoNFTTest is Test {
     }
 
     function test_svg() public {
-        proofOfVenmoNFT.mintTo(address(0x1110000000000000000000000000000000000001));
-        console2.log(proofOfVenmoNFT.tokenURI(0));
+        proofOfVenmoNFT.mintTo(address(0x1000000000000000000000000000000000000001));
+        console2.log(proofOfVenmoNFT.tokenURI(1));
     }
 }

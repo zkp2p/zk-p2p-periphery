@@ -13,12 +13,15 @@ library NFTDescriptor {
 
     struct ConstructTokenURIParams {
         uint256 tokenId;
-        bytes32 venmoIdHash;
+        bytes32 idHash;
+        address owner;
+        string platform;
+        string logo;
     }
 
     function constructTokenURI(ConstructTokenURIParams memory params) public pure returns (string memory) {
-        string memory name = "ZKP2P - Proof of Venmo";
-        string memory description = generateDescription(NFTSVG.bytes32ToString(params.venmoIdHash));
+        string memory name = "ZKP2P - Proof of P2P";
+        string memory description = generateDescription(NFTSVG.bytes32ToString(params.idHash), params.platform);
         string memory image = Base64.encode(bytes(generateSVGImage(params)));
 
         return
@@ -43,16 +46,18 @@ library NFTDescriptor {
             );
     }
 
-    function generateDescription(string memory venmoIdHash) private pure returns (string memory) {
+    function generateDescription(string memory idHash, string memory platform) private pure returns (string memory) {
         return
             string(
                 abi.encodePacked(
-                    "This soulbound NFT represents proof that you are a unique Venmo user. ",
-                    "Mint this by generating a zero knowledge proof of a payment confirmation email you received from Venmo. "
-                    "Your identifier is hashed, so no one knows who you are -- only that you are a Venmo user!",
+                    "This soulbound NFT represents proof that you are a unique",
+                    platform,
+                    " user. ",
+                    "Mint this by generating a zero knowledge proof of a payment confirmation in ZKP2P. "
+                    "Your identifier is hashed, so no one knows who you are -- only that you are an user!",
                     "\\n",
-                    "Venmo Hashed ID: ",
-                    venmoIdHash,
+                    "Hashed ID: ",
+                    idHash,
                     "\\n\\n"
                 )
             );
@@ -61,18 +66,21 @@ library NFTDescriptor {
     function generateSVGImage(ConstructTokenURIParams memory params) internal pure returns (string memory svg) {
         NFTSVG.SVGParams memory svgParams =
             NFTSVG.SVGParams({
-                venmoIdHash: params.venmoIdHash,
+                idHash: params.idHash,
                 tokenId: params.tokenId,
+                owner: params.owner,
+                platform: params.platform,
+                logo: params.logo,
                 color0: "131A2A",
                 color1: "FC72FF",
                 color2: "080B11",
                 color3: "FFFFFF",
-                x1: scale(getCircleCoord(uint256(params.venmoIdHash), 16, params.tokenId), 0, 255, 16, 274),
-                y1: scale(getCircleCoord(uint256(params.venmoIdHash) + 1, 16, params.tokenId), 0, 255, 100, 484),
-                x2: scale(getCircleCoord(uint256(params.venmoIdHash), 32, params.tokenId), 0, 255, 16, 274),
-                y2: scale(getCircleCoord(uint256(params.venmoIdHash) + 1, 32, params.tokenId), 0, 255, 100, 484),
-                x3: scale(getCircleCoord(uint256(params.venmoIdHash), 48, params.tokenId), 0, 255, 16, 274),
-                y3: scale(getCircleCoord(uint256(params.venmoIdHash) + 1, 48, params.tokenId), 0, 255, 100, 484)
+                x1: scale(getCircleCoord(uint256(params.idHash), 16, params.tokenId), 0, 255, 16, 274),
+                y1: scale(getCircleCoord(uint256(uint160(params.owner)), 16, params.tokenId), 0, 255, 100, 484),
+                x2: scale(getCircleCoord(uint256(params.idHash), 32, params.tokenId), 0, 255, 16, 274),
+                y2: scale(getCircleCoord(uint256(uint160(params.owner)), 32, params.tokenId), 0, 255, 100, 484),
+                x3: scale(getCircleCoord(uint256(params.idHash), 48, params.tokenId), 0, 255, 16, 274),
+                y3: scale(getCircleCoord(uint256(uint160(params.owner)), 48, params.tokenId), 0, 255, 100, 484)
             });
 
         return NFTSVG.generateSVG(svgParams);
@@ -93,10 +101,10 @@ library NFTDescriptor {
         uint256 offset,
         uint256 tokenId
     ) internal pure returns (uint256) {
-        return (sliceTokenHex(params, offset) * tokenId) % 255;
+        return (sliceHex(params, offset) * tokenId) % 255;
     }
 
-    function sliceTokenHex(uint256 token, uint256 offset) internal pure returns (uint256) {
-        return uint256(uint8(token >> offset));
+    function sliceHex(uint256 param, uint256 offset) internal pure returns (uint256) {
+        return uint256(uint8(param >> offset));
     }
 }
