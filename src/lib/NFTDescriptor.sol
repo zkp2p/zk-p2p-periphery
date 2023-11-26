@@ -63,10 +63,10 @@ library NFTDescriptor {
             NFTSVG.SVGParams({
                 venmoIdHash: params.venmoIdHash,
                 tokenId: params.tokenId,
-                color0: tokenToColorHex(uint256(params.venmoIdHash), 136),
-                color1: tokenToColorHex(uint256(params.venmoIdHash) + 1, 136), // TODO: + 1 as placeholder
-                color2: tokenToColorHex(uint256(params.venmoIdHash), 0),
-                color3: tokenToColorHex(uint256(params.venmoIdHash) + 1, 0),
+                color0: "131A2A",
+                color1: "FC72FF",
+                color2: "080B11",
+                color3: "FFFFFF",
                 x1: scale(getCircleCoord(uint256(params.venmoIdHash), 16, params.tokenId), 0, 255, 16, 274),
                 y1: scale(getCircleCoord(uint256(params.venmoIdHash) + 1, 16, params.tokenId), 0, 255, 100, 484),
                 x2: scale(getCircleCoord(uint256(params.venmoIdHash), 32, params.tokenId), 0, 255, 16, 274),
@@ -88,16 +88,12 @@ library NFTDescriptor {
         return ((n - inMn) * (outMx - outMn) / (inMx - inMn) + outMn).toString();
     }
 
-    function tokenToColorHex(uint256 token, uint256 offset) internal pure returns (string memory str) {
-        return string((token >> offset).toHexStringNoPrefix(3));
-    }
-
     function getCircleCoord(
-        uint256 tokenAddress,
+        uint256 params,
         uint256 offset,
         uint256 tokenId
     ) internal pure returns (uint256) {
-        return (sliceTokenHex(tokenAddress, offset) * tokenId) % 255;
+        return (sliceTokenHex(params, offset) * tokenId) % 255;
     }
 
     function sliceTokenHex(uint256 token, uint256 offset) internal pure returns (uint256) {
