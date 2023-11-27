@@ -56,6 +56,45 @@ contract ProofOfVenmoNFTTest is Test {
         assertEq(tokenURI, expectedTokenURI);
     }
 
+    function test_MintTwo() public {
+        vm.startPrank(address(1));
+        proofOfVenmoNFT.mintSBT();
+        vm.stopPrank();
+
+        // Register user 0x2
+        ramp.setAccountInfo(
+            address(2),
+            IRamp.AccountInfo({
+                venmoIdHash: bytes32(uint256(2)),
+                deposits: new uint256[](0)
+            })
+        );
+        vm.startPrank(address(2));
+        proofOfVenmoNFT.mintSBT();
+        vm.stopPrank();
+        
+        uint256 currTokenId = proofOfVenmoNFT.currentTokenId();
+        assertEq(currTokenId, 2);
+
+        address ownerOne = proofOfVenmoNFT.ownerOf(1);
+        assertEq(ownerOne, address(1));
+
+        uint256 balanceOne = proofOfVenmoNFT.balanceOf(address(1));
+        assertEq(balanceOne, 1);
+
+        bool mintedOne = proofOfVenmoNFT.minted(bytes32(0x0741728e3aae72eda484e8ccbf00f843c38eae9c399b9bd7fb2b5ee7a055b6bf));
+        assertTrue(mintedOne);
+
+        address ownerTwo = proofOfVenmoNFT.ownerOf(2);
+        assertEq(ownerTwo, address(2));
+
+        uint256 balanceTwo = proofOfVenmoNFT.balanceOf(address(2));
+        assertEq(balanceTwo, 1);
+
+        bool mintedTwo = proofOfVenmoNFT.minted(bytes32(uint256(2)));
+        assertTrue(mintedTwo);
+    }
+
     function test_RevertMintNotRegistered() public {
         vm.startPrank(address(0xd3ad));
         vm.expectRevert("Not registered");
@@ -63,7 +102,7 @@ contract ProofOfVenmoNFTTest is Test {
         vm.stopPrank();
     }
 
-    function test_RevertMintDouble() public {
+    function test_RevertMintNullified() public {
         vm.startPrank(address(1));
         proofOfVenmoNFT.mintSBT();
         vm.expectRevert("Already minted for ID Hash");
@@ -71,7 +110,7 @@ contract ProofOfVenmoNFTTest is Test {
         vm.stopPrank();
     }
 
-    function test_RevertMintDoubleDifferentAddress() public {
+    function test_RevertMintNullifiedDifferentAddress() public {
         vm.startPrank(address(1));
         proofOfVenmoNFT.mintSBT();
         vm.stopPrank();
