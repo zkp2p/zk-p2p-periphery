@@ -6,7 +6,18 @@ import "./interfaces/INFTDescription.sol";
 import "./lib/NFTDescriptor.sol";
 
 contract NFTDescription is INFTDescription {
-    function tokenURI(uint256 tokenId, address owner, bytes32 idHash, string memory platform, string memory logo) external view returns (string memory) {
+    function tokenURI(
+        uint256 tokenId,
+        address owner,
+        bytes32 idHash,
+        string memory platform,
+        string memory logo
+    )
+        external
+        pure
+        returns
+        (string memory)
+    {
         return
             NFTDescriptor.constructTokenURI(
                 NFTDescriptor.ConstructTokenURIParams({

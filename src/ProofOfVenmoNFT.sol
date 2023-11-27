@@ -6,27 +6,98 @@ import "./interfaces/INFTDescription.sol";
 import "./interfaces/IRamp.sol";
 
 contract ProofOfVenmoNFT is ERC721 {
+
+    /* ============ State Variables ============ */
     uint256 public currentTokenId;
     IRamp public ramp;
     INFTDescription public nftDescription;
+    mapping(bytes32 => bool) public minted;
+
+    /* ============ Constructor ============ */
 
     constructor(
         IRamp _ramp,
         INFTDescription _nftDescription
-    ) ERC721('Proof of Venmo-V1', 'PROVE-VENMO') {
+    )
+        ERC721('Proof of Venmo-V1', 'PROVE-VENMO')
+    {
         ramp = _ramp;
         nftDescription = _nftDescription;
     }
 
-    function mintTo(address recipient) public returns (uint256) {
-        // Read logic from Ramp
+    /* ============ External Functions ============ */
+
+    /**
+     * @notice Mint a new soulbound NFT to the recipient
+     *
+     * @return tokenId The new token ID
+     */
+    function mintSBT() public returns (uint256) {
+        // Read user ID from Ramp
+        IRamp.AccountInfo memory accountInfo = ramp.getAccountInfo(msg.sender);
 
         // Check registration
+        require(accountInfo.venmoIdHash != bytes32(0), "Not registered");
+
+        // Check NFT has not been minted
+        require(!minted[accountInfo.venmoIdHash], "Already minted for ID Hash");
+        
+        // Nullify NFT mint
+        minted[accountInfo.venmoIdHash] = true;
 
         uint256 newTokenId = ++currentTokenId;
-        _safeMint(recipient, newTokenId);
+        _safeMint(msg.sender, newTokenId);
+
         return newTokenId;
     }
+
+    /**
+     * @notice Override ERC721 transfer functions to prevent transfers
+     */
+    function transferFrom(
+        address /* from */,
+        address /* to */,
+        uint256 /* id */
+    )
+        public
+        override
+        pure
+    {
+        revert("No transfers allowed");
+    }
+
+    /**
+     * @notice Override ERC721 transfer functions to prevent transfers
+     */
+    function safeTransferFrom(
+        address /* from */,
+        address /* to */,
+        uint256 /* id */
+    )
+        public
+        override
+        pure
+    {
+        revert("No transfers allowed");
+    }
+
+    /**
+     * @notice Override ERC721 transfer functions to prevent transfers
+     */
+    function safeTransferFrom(
+        address /* from */,
+        address /* to */,
+        uint256 /* id */,
+        bytes calldata /* data */
+    )
+        public
+        override
+        pure
+    {
+        revert("No transfers allowed");
+    }
+
+    /* ============ External View Functions ============ */
 
     function tokenURI(uint256 tokenId) public view override returns (string memory) {
         string memory venmoLogo = string(
@@ -44,13 +115,5 @@ contract ProofOfVenmoNFT is ERC721 {
             "Venmo",
             venmoLogo
         );
-    }
-
-    function transferFrom(
-        address /* from */,
-        address /* to */,
-        uint256 /* id */
-    ) public override pure {
-        revert("No transfers allowed");
     }
 }
