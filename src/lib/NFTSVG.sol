@@ -3,10 +3,9 @@ pragma solidity ^0.8.13;
 
 import "openzeppelin-contracts/contracts/utils/Strings.sol";
 import "base64/base64.sol";
-import "solidity-stringutils/strings.sol";
 
 /// @title NFTSVG
-/// @notice Provides a function for generating an SVG associated with a Proof of Venmo NFT
+/// @notice Provides a function for generating an SVG associated with a ZKP2P NFT
 library NFTSVG {
     using Strings for uint256;
 
