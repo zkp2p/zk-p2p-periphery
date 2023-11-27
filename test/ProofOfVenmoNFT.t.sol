@@ -1,19 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import {Test, console2} from "forge-std/Test.sol";
-import {IRamp} from "../src/interfaces/IRamp.sol";
-import {MockRamp} from "../src/mocks/MockRamp.sol";
-import {NFTDescription} from "../src/NFTDescription.sol";
-import {ProofOfVenmoNFT} from "../src/ProofOfVenmoNFT.sol";
+import { Test, console2 } from "forge-std/Test.sol";
+import { IRamp } from "../src/interfaces/IRamp.sol";
+import { MockRamp } from "../src/mocks/MockRamp.sol";
+import { ProofOfVenmoNFT } from "../src/ProofOfVenmoNFT.sol";
 
 contract ProofOfVenmoNFTTest is Test {
     ProofOfVenmoNFT public proofOfVenmoNFT;
-    NFTDescription public nftDescription;
     MockRamp public ramp;
 
     function setUp() public {
-        nftDescription = new NFTDescription();
         ramp = new MockRamp();
 
         // Register user 0x1
@@ -25,10 +22,7 @@ contract ProofOfVenmoNFTTest is Test {
             })
         );
 
-        proofOfVenmoNFT = new ProofOfVenmoNFT(
-            ramp,
-            nftDescription
-        );
+        proofOfVenmoNFT = new ProofOfVenmoNFT(ramp);
     }
     
     function test_Mint() public {
@@ -127,6 +121,21 @@ contract ProofOfVenmoNFTTest is Test {
         vm.startPrank(address(2));
         vm.expectRevert("Already minted for ID Hash");
         proofOfVenmoNFT.mintSBT();
+        vm.stopPrank();
+    }
+
+    function test_RevertTransfers() public {
+        vm.startPrank(address(1));
+        proofOfVenmoNFT.mintSBT();
+        
+        vm.expectRevert("No transfers allowed");
+        proofOfVenmoNFT.transferFrom(address(1), address(2), 1);
+
+        vm.expectRevert("No transfers allowed");
+        proofOfVenmoNFT.safeTransferFrom(address(1), address(2), 1);
+
+        vm.expectRevert("No transfers allowed");
+        proofOfVenmoNFT.safeTransferFrom(address(1), address(2), 1, "");
         vm.stopPrank();
     }
 }

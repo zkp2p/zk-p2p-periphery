@@ -1,28 +1,21 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import "solmate/tokens/ERC721.sol";
-import "./interfaces/INFTDescription.sol";
-import "./interfaces/IRamp.sol";
+import { ERC721 } from "openzeppelin-contracts/contracts/token/ERC721/ERC721.sol";
+import { IRamp } from "./interfaces/IRamp.sol";
+import { NFTDescriptor } from "./lib/NFTDescriptor.sol";
 
 contract ProofOfVenmoNFT is ERC721 {
 
     /* ============ State Variables ============ */
     uint256 public currentTokenId;
     IRamp public ramp;
-    INFTDescription public nftDescription;
     mapping(bytes32 => bool) public minted;
 
     /* ============ Constructor ============ */
 
-    constructor(
-        IRamp _ramp,
-        INFTDescription _nftDescription
-    )
-        ERC721('Proof of Venmo-V1', 'PROVE-VENMO')
-    {
+    constructor(IRamp _ramp) ERC721('Proof of Venmo-V1', 'PROVE-VENMO') {
         ramp = _ramp;
-        nftDescription = _nftDescription;
     }
 
     /* ============ External Functions ============ */
@@ -51,6 +44,10 @@ contract ProofOfVenmoNFT is ERC721 {
         return newTokenId;
     }
 
+    function approve(address /* spender */, uint256 /* id */) public override pure {
+        revert("No transfers allowed");
+    }
+
     /**
      * @notice Override ERC721 transfer functions to prevent transfers
      */
@@ -58,37 +55,6 @@ contract ProofOfVenmoNFT is ERC721 {
         address /* from */,
         address /* to */,
         uint256 /* id */
-    )
-        public
-        override
-        pure
-    {
-        revert("No transfers allowed");
-    }
-
-    /**
-     * @notice Override ERC721 transfer functions to prevent transfers
-     */
-    function safeTransferFrom(
-        address /* from */,
-        address /* to */,
-        uint256 /* id */
-    )
-        public
-        override
-        pure
-    {
-        revert("No transfers allowed");
-    }
-
-    /**
-     * @notice Override ERC721 transfer functions to prevent transfers
-     */
-    function safeTransferFrom(
-        address /* from */,
-        address /* to */,
-        uint256 /* id */,
-        bytes calldata /* data */
     )
         public
         override
@@ -107,13 +73,16 @@ contract ProofOfVenmoNFT is ERC721 {
         );
         address owner = ownerOf(tokenId);
         IRamp.AccountInfo memory accountInfo = ramp.getAccountInfo(owner);
-        
-        return nftDescription.tokenURI(
-            tokenId,
-            owner,
-            accountInfo.venmoIdHash,
-            "Venmo",
-            venmoLogo
-        );
+
+        return
+            NFTDescriptor.constructTokenURI(
+                NFTDescriptor.ConstructTokenURIParams({
+                    tokenId: tokenId,
+                    idHash: accountInfo.venmoIdHash,
+                    owner: owner,
+                    platform: "Venmo",
+                    logo: venmoLogo
+                })
+            );
     }
 }
