@@ -2,20 +2,20 @@
 pragma solidity ^0.8.13;
 
 import "solmate/tokens/ERC721.sol";
-import "./interfaces/IDescription.sol";
+import "./interfaces/INFTDescription.sol";
 import "./interfaces/IRamp.sol";
 
 contract ProofOfVenmoNFT is ERC721 {
     uint256 public currentTokenId;
     IRamp public ramp;
-    IDescription public description;
+    INFTDescription public nftDescription;
 
     constructor(
         IRamp _ramp,
-        IDescription _description
+        INFTDescription _nftDescription
     ) ERC721('Proof of Venmo-V1', 'PROVE-VENMO') {
         ramp = _ramp;
-        description = _description;
+        nftDescription = _nftDescription;
     }
 
     function mintTo(address recipient) public returns (uint256) {
@@ -37,7 +37,7 @@ contract ProofOfVenmoNFT is ERC721 {
         address owner = ownerOf(tokenId);
         IRamp.AccountInfo memory accountInfo = ramp.getAccountInfo(owner);
         
-        return description.tokenURI(
+        return nftDescription.tokenURI(
             tokenId,
             owner,
             accountInfo.venmoIdHash,

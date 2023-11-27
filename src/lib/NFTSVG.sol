@@ -3,6 +3,7 @@ pragma solidity ^0.8.13;
 
 import "openzeppelin-contracts/contracts/utils/Strings.sol";
 import "base64/base64.sol";
+import "solidity-stringutils/strings.sol";
 
 /// @title NFTSVG
 /// @notice Provides a function for generating an SVG associated with a Proof of Venmo NFT
@@ -35,12 +36,11 @@ library NFTSVG {
             string(
                 abi.encodePacked(
                     generateSVGDefs(params),
-                    generateSVGBorderText(idHashStr, params.platform),
+                    generateSVGBorderText(idHashStr, ownerStr),
                     generateSVGLogo(),
                     params.logo,
                     generateSVGPositionData(
                         params.tokenId.toString(),
-                        ownerStr,
                         params.platform
                     ),
                     '</svg>'
@@ -133,29 +133,25 @@ library NFTSVG {
         );
     }
 
-    function generateSVGBorderText(string memory idHash, string memory platform) private pure returns (string memory svg) {
+    function generateSVGBorderText(string memory idHash, string memory owner) private pure returns (string memory svg) {
         svg = string(
             abi.encodePacked(
                 '<text text-rendering="optimizeSpeed">',
-                '<textPath startOffset="-100%" fill="white" font-family="\'Courier New\', monospace" font-size="10px" xlink:href="#text-path-a">',
-                platform,
+                '<textPath startOffset="-100%" fill="white" font-family="\'Courier New\', monospace" font-size="10px" xlink:href="#text-path-a">Hash',
                 unicode' • ',
                 idHash,
                 ' <animate additive="sum" attributeName="startOffset" from="0%" to="100%" begin="0s" dur="30s" repeatCount="indefinite" />',
-                '</textPath> <textPath startOffset="0%" fill="white" font-family="\'Courier New\', monospace" font-size="10px" xlink:href="#text-path-a">',
-                platform,
+                '</textPath> <textPath startOffset="0%" fill="white" font-family="\'Courier New\', monospace" font-size="10px" xlink:href="#text-path-a">Hash',
                 unicode' • ',
                 idHash,
                 ' <animate additive="sum" attributeName="startOffset" from="0%" to="100%" begin="0s" dur="30s" repeatCount="indefinite" /> </textPath>',
-                '<textPath startOffset="50%" fill="white" font-family="\'Courier New\', monospace" font-size="10px" xlink:href="#text-path-a">',
-                platform,
+                '<textPath startOffset="50%" fill="white" font-family="\'Courier New\', monospace" font-size="10px" xlink:href="#text-path-a">Owner',
                 unicode' • ',
-                idHash,
+                owner,
                 ' <animate additive="sum" attributeName="startOffset" from="0%" to="100%" begin="0s" dur="30s"',
-                ' repeatCount="indefinite" /></textPath><textPath startOffset="-50%" fill="white" font-family="\'Courier New\', monospace" font-size="10px" xlink:href="#text-path-a">',
-                platform,
+                ' repeatCount="indefinite" /></textPath><textPath startOffset="-50%" fill="white" font-family="\'Courier New\', monospace" font-size="10px" xlink:href="#text-path-a">Owner',
                 unicode' • ',
-                idHash,
+                owner,
                 ' <animate additive="sum" attributeName="startOffset" from="0%" to="100%" begin="0s" dur="30s" repeatCount="indefinite" /></textPath></text>'
             )
         );
@@ -164,7 +160,7 @@ library NFTSVG {
     function generateSVGLogo() private pure returns (string memory svg) {
         svg = string(
             abi.encodePacked(
-                '<g style="transform:translate(100px, 70px)">',
+                '<g style="transform:translate(105px, 70px)">',
                 '<svg width="85" height="85" viewBox="0 0 192 192" fill="none" xmlns="http://www.w3.org/2000/svg">',
                 '<path d="M113.746 118.396C114.067 118.396 123.521 117.616 127.376 116.928C151.471 111.145 169.416 89.3912 169.416 63.3691C169.462 32.9412 144.908 8.29589 114.664 8.29589C114.342 8.29589 114.067 8.29589 113.746 8.29589H114.664H116.729C115.49 8.29589 114.297 8.25 113.011 8.25H52.6604C36.2303 8.25 22.875 21.6053 22.875 38.0354V158.233C22.875 172.322 34.3027 183.75 48.3923 183.75C64.3635 183.75 77.3516 170.808 77.3516 154.791V123.169C77.3516 120.645 79.4168 118.58 81.941 118.58H107.045C109.753 118.58 113.746 118.351 113.746 118.351V118.396Z" fill="url(#paint0_linear_254_2679)"/>',
                 '<path d="M22.5 37.7579L23.0038 146.625C32.3013 115.376 53.736 107.541 86.3919 115.605C93.262 117.575 98.6206 118.217 103.292 118.4H106.498C109.201 118.4 113.185 118.171 113.185 118.171C113.506 118.171 122.941 117.392 126.788 116.705C130.544 115.788 134.162 114.46 137.551 112.81C144.788 108.961 150.696 103.784 154.406 100.301C159.856 94.2991 164.024 87.0597 166.406 79.0871C167.688 73.8636 168.375 68.1362 168.375 61.9506C168.375 59.7512 168.283 57.5977 168.146 55.49C164.711 31.0224 145.337 11.7782 120.88 8.75413C120.055 8.66249 119.231 8.57086 118.361 8.52504C117.674 8.47922 116.987 8.4334 116.3 8.4334C114.513 8.34176 112.681 8.25012 110.804 8.25012H52.2246C35.8738 8.2043 22.5916 21.4003 22.5 37.7579Z" fill="url(#paint1_linear_254_2679)"/>',
@@ -203,31 +199,22 @@ library NFTSVG {
 
     function generateSVGPositionData(
         string memory tokenId,
-        string memory owner,
         string memory platform
     ) private pure returns (string memory svg) {
         uint256 str1length = bytes(tokenId).length + 4;
-        uint256 str2length = bytes(owner).length + 10;
-        uint256 str3length = bytes(platform).length + 10;
+        uint256 str2length = bytes(platform).length + 10;
         svg = string(
             abi.encodePacked(
-                ' <g style="transform:translate(29px, 384px)">',
+                ' <g style="transform:translate(29px, 414px)">',
                 '<rect width="',
                 uint256(7 * (str1length + 4)).toString(),
                 'px" height="26px" rx="8px" ry="8px" fill="rgba(0,0,0,0.6)" />',
                 '<text x="12px" y="17px" font-family="\'Courier New\', monospace" font-size="12px" fill="white"><tspan fill="rgba(255,255,255,0.6)">ID: </tspan>',
                 tokenId,
                 '</text></g>',
-                ' <g style="transform:translate(29px, 414px)">',
-                '<rect width="',
-                uint256(7 * (str2length + 4)).toString(),
-                'px" height="26px" rx="8px" ry="8px" fill="rgba(0,0,0,0.6)" />',
-                '<text x="12px" y="17px" font-family="\'Courier New\', monospace" font-size="12px" fill="white"><tspan fill="rgba(255,255,255,0.6)">Owner: </tspan>',
-                owner,
-                '</text></g>',
                 ' <g style="transform:translate(29px, 444px)">',
                 '<rect width="',
-                uint256(7 * (str3length + 4)).toString(),
+                uint256(7 * (str2length + 4)).toString(),
                 'px" height="26px" rx="8px" ry="8px" fill="rgba(0,0,0,0.6)" />',
                 '<text x="12px" y="17px" font-family="\'Courier New\', monospace" font-size="12px" fill="white"><tspan fill="rgba(255,255,255,0.6)">Platform: </tspan>',
                 platform,
