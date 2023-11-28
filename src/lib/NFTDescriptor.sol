@@ -7,6 +7,9 @@ import "base64/base64.sol";
 import "./HexStrings.sol";
 import "./NFTSVG.sol";
 
+/// @title NFTDescriptor
+/// @notice Provides a function for generating an SVG and other metadata associated with a ZKP2P NFT
+/// Modified from Uniswap V3 NFTs https://github.com/Uniswap/v3-periphery/blob/main/contracts/libraries/NFTDescriptor.sol
 library NFTDescriptor {
     using Strings for uint256;
     using HexStrings for uint256;
@@ -20,7 +23,6 @@ library NFTDescriptor {
     }
 
     function constructTokenURI(ConstructTokenURIParams memory params) public pure returns (string memory) {
-        string memory name = "ZKP2P - Proof of P2P";
         string memory description = generateDescription(NFTSVG.bytes32ToString(params.idHash), params.platform);
         string memory image = Base64.encode(bytes(generateSVGImage(params)));
 
@@ -32,7 +34,8 @@ library NFTDescriptor {
                         bytes(
                             abi.encodePacked(
                                 '{"name":"',
-                                name,
+                                "Proof of ",
+                                params.platform,
                                 '", "description":"',
                                 description,
                                 '", "image": "',
@@ -50,12 +53,12 @@ library NFTDescriptor {
         return
             string(
                 abi.encodePacked(
-                    "This soulbound NFT represents proof that you are a unique",
+                    "This soulbound NFT represents proof that you are a unique ",
                     platform,
                     " user. ",
                     "Mint this by generating a zero knowledge proof of a payment confirmation in ZKP2P. "
                     "Your identifier is hashed, so no one knows who you are -- only that you are an user!",
-                    "\\n",
+                    "\\n\\n",
                     "Hashed ID: ",
                     idHash,
                     "\\n\\n"
@@ -71,10 +74,10 @@ library NFTDescriptor {
                 owner: params.owner,
                 platform: params.platform,
                 logo: params.logo,
-                color0: "131A2A",
-                color1: "FC72FF",
-                color2: "080B11",
-                color3: "FFFFFF",
+                color0: "1D1F22",
+                color1: "F04554",
+                color2: "F9AC49",
+                color3: "3C3A9F",
                 x1: scale(getCircleCoord(uint256(params.idHash), 16, params.tokenId), 0, 255, 16, 274),
                 y1: scale(getCircleCoord(uint256(uint160(params.owner)), 16, params.tokenId), 0, 255, 100, 484),
                 x2: scale(getCircleCoord(uint256(params.idHash), 32, params.tokenId), 0, 255, 16, 274),

@@ -6,6 +6,7 @@ import "base64/base64.sol";
 
 /// @title NFTSVG
 /// @notice Provides a function for generating an SVG associated with a ZKP2P NFT
+/// Modified from Uniswap V3 NFTs https://github.com/Uniswap/v3-periphery/blob/main/contracts/libraries/NFTSVG.sol
 library NFTSVG {
     using Strings for uint256;
 
