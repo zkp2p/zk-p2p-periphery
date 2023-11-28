@@ -26,7 +26,7 @@ contract ProofOfVenmoNFTTest is Test {
     }
     
     function test_Mint() public {
-        uint256 prevMinted = proofOfVenmoNFT.getTokenId(bytes32(0x0741728e3aae72eda484e8ccbf00f843c38eae9c399b9bd7fb2b5ee7a055b6bf));
+        uint256 prevMinted = proofOfVenmoNFT.getTokenId(address(1));
         assertEq(prevMinted, 0);
 
         vm.startPrank(address(1));
@@ -42,7 +42,7 @@ contract ProofOfVenmoNFTTest is Test {
         uint256 balance = proofOfVenmoNFT.balanceOf(address(1));
         assertEq(balance, 1);
 
-        uint256 currMinted = proofOfVenmoNFT.getTokenId(bytes32(0x0741728e3aae72eda484e8ccbf00f843c38eae9c399b9bd7fb2b5ee7a055b6bf));
+        uint256 currMinted = proofOfVenmoNFT.getTokenId(address(1));
         assertEq(currMinted, 1);
 
         string memory tokenURI = proofOfVenmoNFT.tokenURI(tokenId);
@@ -50,7 +50,46 @@ contract ProofOfVenmoNFTTest is Test {
         assertEq(tokenURI, expectedTokenURI);
     }
 
-    function test_MintTwo() public {
+    function test_MintTwoSameIdHash() public {
+        vm.startPrank(address(1));
+        proofOfVenmoNFT.mintSBT();
+        vm.stopPrank();
+
+        // Register user 0x2 with same ID Hash
+        ramp.setAccountInfo(
+            address(2),
+            IRamp.AccountInfo({
+                venmoIdHash: bytes32(0x0741728e3aae72eda484e8ccbf00f843c38eae9c399b9bd7fb2b5ee7a055b6bf),
+                deposits: new uint256[](0)
+            })
+        );
+        vm.startPrank(address(2));
+        proofOfVenmoNFT.mintSBT();
+        vm.stopPrank();
+        
+        uint256 currTokenId = proofOfVenmoNFT.currentTokenId();
+        assertEq(currTokenId, 2);
+
+        address ownerOne = proofOfVenmoNFT.ownerOf(1);
+        assertEq(ownerOne, address(1));
+
+        uint256 balanceOne = proofOfVenmoNFT.balanceOf(address(1));
+        assertEq(balanceOne, 1);
+
+        uint256 mintedOne = proofOfVenmoNFT.getTokenId(address(1));
+        assertEq(mintedOne, 1);
+
+        address ownerTwo = proofOfVenmoNFT.ownerOf(2);
+        assertEq(ownerTwo, address(2));
+
+        uint256 balanceTwo = proofOfVenmoNFT.balanceOf(address(2));
+        assertEq(balanceTwo, 1);
+
+        uint256 mintedTwo = proofOfVenmoNFT.getTokenId(address(2));
+        assertEq(mintedTwo, 2);
+    }
+
+    function test_MintTwoDifferentIdHash() public {
         vm.startPrank(address(1));
         proofOfVenmoNFT.mintSBT();
         vm.stopPrank();
@@ -76,7 +115,7 @@ contract ProofOfVenmoNFTTest is Test {
         uint256 balanceOne = proofOfVenmoNFT.balanceOf(address(1));
         assertEq(balanceOne, 1);
 
-        uint256 mintedOne = proofOfVenmoNFT.getTokenId(bytes32(0x0741728e3aae72eda484e8ccbf00f843c38eae9c399b9bd7fb2b5ee7a055b6bf));
+        uint256 mintedOne = proofOfVenmoNFT.getTokenId(address(1));
         assertEq(mintedOne, 1);
 
         address ownerTwo = proofOfVenmoNFT.ownerOf(2);
@@ -85,7 +124,7 @@ contract ProofOfVenmoNFTTest is Test {
         uint256 balanceTwo = proofOfVenmoNFT.balanceOf(address(2));
         assertEq(balanceTwo, 1);
 
-        uint256 mintedTwo = proofOfVenmoNFT.getTokenId(bytes32(uint256(2)));
+        uint256 mintedTwo = proofOfVenmoNFT.getTokenId(address(2));
         assertEq(mintedTwo, 2);
     }
 
@@ -99,27 +138,7 @@ contract ProofOfVenmoNFTTest is Test {
     function test_RevertMintNullified() public {
         vm.startPrank(address(1));
         proofOfVenmoNFT.mintSBT();
-        vm.expectRevert("Already minted for ID Hash");
-        proofOfVenmoNFT.mintSBT();
-        vm.stopPrank();
-    }
-
-    function test_RevertMintNullifiedDifferentAddress() public {
-        vm.startPrank(address(1));
-        proofOfVenmoNFT.mintSBT();
-        vm.stopPrank();
-
-        // Register user 0x2
-        ramp.setAccountInfo(
-            address(2),
-            IRamp.AccountInfo({
-                venmoIdHash: bytes32(0x0741728e3aae72eda484e8ccbf00f843c38eae9c399b9bd7fb2b5ee7a055b6bf),
-                deposits: new uint256[](0)
-            })
-        );
-
-        vm.startPrank(address(2));
-        vm.expectRevert("Already minted for ID Hash");
+        vm.expectRevert("Already minted for owner");
         proofOfVenmoNFT.mintSBT();
         vm.stopPrank();
     }
