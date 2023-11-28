@@ -12,7 +12,7 @@ contract ProofOfVenmoNFTScript is Script {
         vm.startBroadcast(deployerPrivateKey);
 
         // Ramp V1 Address on BASE
-        IRamp ramp = IRamp(address(0xB084f36C5B7193af8Dd17025b36FBe2DD496a06f));
+        IRamp ramp = IRamp(address(0xa08d9952196ABECB2BaCD14188093314053f6335));
 
         // Deploy NFT
         new ProofOfVenmoNFT(ramp);
