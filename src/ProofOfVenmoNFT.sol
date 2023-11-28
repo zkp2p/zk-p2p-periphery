@@ -10,7 +10,7 @@ contract ProofOfVenmoNFT is ERC721ReadOnly {
     /* ============ State Variables ============ */
     uint256 public currentTokenId;
     IRamp public ramp;
-    mapping(bytes32 => bool) public minted;
+    mapping(bytes32 => uint256) internal minted;
 
     /* ============ Constructor ============ */
 
@@ -33,12 +33,12 @@ contract ProofOfVenmoNFT is ERC721ReadOnly {
         require(accountInfo.venmoIdHash != bytes32(0), "Not registered");
 
         // Check NFT has not been minted
-        require(!minted[accountInfo.venmoIdHash], "Already minted for ID Hash");
+        require(minted[accountInfo.venmoIdHash] == 0, "Already minted for ID Hash");
         
         // Nullify NFT mint
-        minted[accountInfo.venmoIdHash] = true;
-
         uint256 newTokenId = ++currentTokenId;
+        minted[accountInfo.venmoIdHash] = newTokenId;
+
         _safeMint(msg.sender, newTokenId);
 
         return newTokenId;
@@ -65,5 +65,9 @@ contract ProofOfVenmoNFT is ERC721ReadOnly {
                     logo: venmoLogo
                 })
             );
+    }
+
+    function getTokenId(bytes32 idHash) public view returns (uint256) {
+        return minted[idHash];
     }
 }
