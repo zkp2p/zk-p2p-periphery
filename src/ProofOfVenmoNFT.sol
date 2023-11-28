@@ -33,6 +33,7 @@ contract ProofOfVenmoNFT is ERC721ReadOnly {
         require(accountInfo.venmoIdHash != bytes32(0), "Not registered");
 
         // Check NFT has not been minted for address
+        // Note: tokenId starts at 1, so this check is valid
         require(addressToTokenId[msg.sender] == 0, "Already minted for owner");
         
         // Nullify NFT mint for address
