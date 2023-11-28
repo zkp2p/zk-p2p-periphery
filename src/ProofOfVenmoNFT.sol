@@ -1,20 +1,20 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import { ERC721 } from "openzeppelin-contracts/contracts/token/ERC721/ERC721.sol";
+import { ERC721ReadOnly } from "./external/ERC721ReadOnly.sol";
 import { IRamp } from "./interfaces/IRamp.sol";
 import { NFTDescriptor } from "./lib/NFTDescriptor.sol";
 
-contract ProofOfVenmoNFT is ERC721 {
+contract ProofOfVenmoNFT is ERC721ReadOnly {
 
     /* ============ State Variables ============ */
     uint256 public currentTokenId;
     IRamp public ramp;
-    mapping(bytes32 => bool) public minted;
+    mapping(address => uint256) internal addressToTokenId;
 
     /* ============ Constructor ============ */
 
-    constructor(IRamp _ramp) ERC721('Proof of Venmo-V1', 'PROVE-VENMO') {
+    constructor(IRamp _ramp) ERC721ReadOnly('Proof of Venmo-V1', 'PROVE-VENMO') {
         ramp = _ramp;
     }
 
@@ -32,35 +32,17 @@ contract ProofOfVenmoNFT is ERC721 {
         // Check registration
         require(accountInfo.venmoIdHash != bytes32(0), "Not registered");
 
-        // Check NFT has not been minted
-        require(!minted[accountInfo.venmoIdHash], "Already minted for ID Hash");
+        // Check NFT has not been minted for address
+        // Note: tokenId starts at 1, so this check is valid
+        require(addressToTokenId[msg.sender] == 0, "Already minted for owner");
         
-        // Nullify NFT mint
-        minted[accountInfo.venmoIdHash] = true;
-
+        // Nullify NFT mint for address
         uint256 newTokenId = ++currentTokenId;
+        addressToTokenId[msg.sender] = newTokenId;
+
         _safeMint(msg.sender, newTokenId);
 
         return newTokenId;
-    }
-
-    function approve(address /* spender */, uint256 /* id */) public override pure {
-        revert("No transfers allowed");
-    }
-
-    /**
-     * @notice Override ERC721 transfer functions to prevent transfers
-     */
-    function transferFrom(
-        address /* from */,
-        address /* to */,
-        uint256 /* id */
-    )
-        public
-        override
-        pure
-    {
-        revert("No transfers allowed");
     }
 
     /* ============ External View Functions ============ */
@@ -84,5 +66,9 @@ contract ProofOfVenmoNFT is ERC721 {
                     logo: venmoLogo
                 })
             );
+    }
+
+    function getTokenId(address owner) public view returns (uint256) {
+        return addressToTokenId[owner];
     }
 }
