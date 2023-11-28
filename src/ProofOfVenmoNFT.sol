@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import { ERC721 } from "openzeppelin-contracts/contracts/token/ERC721/ERC721.sol";
+import { ERC721ReadOnly } from "./external/ERC721ReadOnly.sol";
 import { IRamp } from "./interfaces/IRamp.sol";
 import { NFTDescriptor } from "./lib/NFTDescriptor.sol";
 
-contract ProofOfVenmoNFT is ERC721 {
+contract ProofOfVenmoNFT is ERC721ReadOnly {
 
     /* ============ State Variables ============ */
     uint256 public currentTokenId;
@@ -14,7 +14,7 @@ contract ProofOfVenmoNFT is ERC721 {
 
     /* ============ Constructor ============ */
 
-    constructor(IRamp _ramp) ERC721('Proof of Venmo-V1', 'PROVE-VENMO') {
+    constructor(IRamp _ramp) ERC721ReadOnly('Proof of Venmo-V1', 'PROVE-VENMO') {
         ramp = _ramp;
     }
 
@@ -42,25 +42,6 @@ contract ProofOfVenmoNFT is ERC721 {
         _safeMint(msg.sender, newTokenId);
 
         return newTokenId;
-    }
-
-    function approve(address /* spender */, uint256 /* id */) public override pure {
-        revert("No transfers allowed");
-    }
-
-    /**
-     * @notice Override ERC721 transfer functions to prevent transfers
-     */
-    function transferFrom(
-        address /* from */,
-        address /* to */,
-        uint256 /* id */
-    )
-        public
-        override
-        pure
-    {
-        revert("No transfers allowed");
     }
 
     /* ============ External View Functions ============ */
