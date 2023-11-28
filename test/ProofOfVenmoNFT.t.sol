@@ -128,13 +128,13 @@ contract ProofOfVenmoNFTTest is Test {
         vm.startPrank(address(1));
         proofOfVenmoNFT.mintSBT();
         
-        vm.expectRevert("No transfers allowed");
+        vm.expectRevert("ERC721 public transferFrom not allowed");
         proofOfVenmoNFT.transferFrom(address(1), address(2), 1);
 
-        vm.expectRevert("No transfers allowed");
+        vm.expectRevert("ERC721 public safeTransferFrom not allowed");
         proofOfVenmoNFT.safeTransferFrom(address(1), address(2), 1);
 
-        vm.expectRevert("No transfers allowed");
+        vm.expectRevert("ERC721 public safeTransferFrom not allowed");
         proofOfVenmoNFT.safeTransferFrom(address(1), address(2), 1, "");
         vm.stopPrank();
     }
