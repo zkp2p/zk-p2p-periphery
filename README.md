@@ -16,5 +16,5 @@ External library that generates image SVG and other metadata for zkNFTs. Forked 
 ### NFTSVG
 External library that generates image SVGs for zkNFTs. Forked and modified from Uniswap V3's [NFTSVG](https://github.com/Uniswap/v3-periphery/blob/main/contracts/libraries/NFTSVG.sol).
 
-### ProofOfVenmoNFT
-A zkNFT soulbound token that proves you are a Venmo user. Can only be minted once for each registered Ethereum address.
+### ProofOfP2PNFT
+A zkNFT soulbound token that proves you are a Venmo user in ZKP2P. Can only be minted once for each registered Ethereum address.
