@@ -19,7 +19,6 @@ library NFTDescriptor {
         bytes32 idHash;
         address owner;
         string platform;
-        string logo;
     }
 
     function constructTokenURI(ConstructTokenURIParams memory params) public pure returns (string memory) {
@@ -34,8 +33,7 @@ library NFTDescriptor {
                         bytes(
                             abi.encodePacked(
                                 '{"name":"',
-                                "Proof of ",
-                                params.platform,
+                                "Proof of P2P",
                                 '", "description":"',
                                 description,
                                 '", "image": "',
@@ -56,7 +54,7 @@ library NFTDescriptor {
                     "This soulbound NFT represents proof that you are a unique ",
                     platform,
                     " user. ",
-                    "Mint this by generating a zero knowledge proof of a payment confirmation in ZKP2P. "
+                    "Mint this by generating a zero knowledge proof of a payment confirmation email. "
                     "Your identifier is hashed, so no one knows who you are -- only that you are an user!",
                     "\\n\\n",
                     "Hashed ID: ",
@@ -73,11 +71,10 @@ library NFTDescriptor {
                 tokenId: params.tokenId,
                 owner: params.owner,
                 platform: params.platform,
-                logo: params.logo,
-                color0: "1D1F22",
-                color1: "F04554",
-                color2: "F9AC49",
-                color3: "3C3A9F",
+                color0: "3B389D",
+                color1: "F36D60",
+                color2: "3F9347",
+                color3: "721B78",
                 x1: scale(getCircleCoord(uint256(params.idHash), 16, params.tokenId), 0, 255, 16, 274),
                 y1: scale(getCircleCoord(uint256(uint160(params.owner)), 16, params.tokenId), 0, 255, 100, 484),
                 x2: scale(getCircleCoord(uint256(params.idHash), 32, params.tokenId), 0, 255, 16, 274),

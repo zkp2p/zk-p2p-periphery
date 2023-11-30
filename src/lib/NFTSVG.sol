@@ -15,7 +15,6 @@ library NFTSVG {
         bytes32 idHash;
         uint256 tokenId;
         string platform;
-        string logo;
         string color0;
         string color1;
         string color2;
@@ -38,7 +37,6 @@ library NFTSVG {
                     generateSVGDefs(params),
                     generateSVGBorderText(idHashStr, ownerStr),
                     generateSVGLogo(),
-                    params.logo,
                     generateSVGPositionData(
                         params.tokenId.toString(),
                         params.platform
@@ -216,7 +214,7 @@ library NFTSVG {
                 '<rect width="',
                 uint256(7 * (str2length + 4)).toString(),
                 'px" height="26px" rx="8px" ry="8px" fill="rgba(0,0,0,0.6)" />',
-                '<text x="12px" y="17px" font-family="\'Courier New\', monospace" font-size="12px" fill="white"><tspan fill="rgba(255,255,255,0.6)">Platform: </tspan>',
+                '<text x="12px" y="17px" font-family="\'Courier New\', monospace" font-size="12px" fill="white"><tspan fill="rgba(255,255,255,0.6)">Protocol: </tspan>',
                 platform,
                 '</text></g>'
             )

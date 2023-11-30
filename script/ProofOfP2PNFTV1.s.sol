@@ -2,9 +2,9 @@
 pragma solidity ^0.8.13;
 
 import { Script, console2 } from "forge-std/Script.sol";
-import { ProofOfVenmoNFT, IRamp } from "../src/ProofOfVenmoNFT.sol";
+import { ProofOfP2PNFTV1, IRamp } from "../src/ProofOfP2PNFTV1.sol";
 
-contract ProofOfVenmoNFTScript is Script {
+contract ProofOfP2PNFTV1Script is Script {
     function setUp() public {}
 
     function run() public {
@@ -15,7 +15,7 @@ contract ProofOfVenmoNFTScript is Script {
         IRamp ramp = IRamp(address(0xB084f36C5B7193af8Dd17025b36FBe2DD496a06f));
 
         // Deploy NFT
-        new ProofOfVenmoNFT(ramp);
+        new ProofOfP2PNFTV1(ramp);
 
         vm.stopBroadcast();
     }
