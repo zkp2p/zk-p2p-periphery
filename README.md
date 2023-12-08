@@ -8,6 +8,9 @@
 3. Run `forge install` to build dependencies
 4. Run `forge test` to run tests
 
+## Deploy
+Run `forge script script/ProofOfVenmoNFT.s.sol:ProofOfVenmoNFTScript --fork-url http://localhost:8545 --broadcast`
+
 ## Contracts
 
 ### NFTDescriptor
