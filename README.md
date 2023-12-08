@@ -9,7 +9,7 @@
 4. Run `forge test` to run tests
 
 ## Deploy
-Run `forge script script/ProofOfVenmoNFT.s.sol:ProofOfVenmoNFTScript --fork-url http://localhost:8545 --broadcast`
+Run `forge script script/ProofOfP2PNFTV1.s.sol:ProofOfP2PNFTV1Script --fork-url http://localhost:8545 --broadcast`
 
 ## Contracts
 
