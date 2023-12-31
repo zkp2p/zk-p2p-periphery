@@ -2,37 +2,38 @@
 pragma solidity ^0.8.13;
 
 import { Script, console2 } from "forge-std/Script.sol";
-import { ProofOfVenmoNFTV2, IRamp } from "../src/ProofOfVenmoNFTV2.sol";
+import { ProofOfUpiNFTV1, IRampV2 } from "../src/ProofOfUpiNFTV1.sol";
 
-contract ProofOfVenmoNFTV2Script is Script {
+contract ProofOfUpiNFTV1Script is Script {
     function setUp() public {}
 
     function run() public {
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
         string memory deployIdentifier = vm.envString("DEPLOY_IDENTIFIER");
         bytes32 deployIdentifierHash = keccak256(abi.encodePacked(deployIdentifier));
+
         vm.startBroadcast(deployerPrivateKey);
 
         // Ramp V2 Address
-        IRamp ramp;
+        IRampV2 ramp;
         if (deployIdentifierHash == keccak256(abi.encodePacked("localhardhat"))) {
             // Hardhat
-            ramp = IRamp(address(0xa85233C63b9Ee964Add6F2cffe00Fd84eb32338f));
+            ramp = IRampV2(address(0x0B306BF915C4d645ff596e518fAf3F9669b97016));
         } else if (deployIdentifierHash == keccak256(abi.encodePacked("goerli_staging"))) {
             // Goerli
-            ramp = IRamp(address(0xfD04fb0538479ad70DFae539c875B2C180205012));
+            ramp = IRampV2(address(0x7eDD66B19A22293af86A2d96761FD7146BA3fF6c));
         } else if (deployIdentifierHash == keccak256(abi.encodePacked("base_staging"))) {
             // Base staging TODO
-            ramp = IRamp(address(1));
+            ramp = IRampV2(address(1));
         } else if (deployIdentifierHash == keccak256(abi.encodePacked("base_production"))) {
             // Base production TODO
-            ramp = IRamp(address(1));
+            ramp = IRampV2(address(1));
         } else {
             revert("Unsupported chain");
         }
 
         // Deploy NFT
-        new ProofOfVenmoNFTV2(ramp);
+        new ProofOfUpiNFTV1(ramp);
 
         vm.stopBroadcast();
     }
