@@ -12,9 +12,9 @@
 1. `cp .env.default .env`
 2. For `DEPLOY_IDENTIFIER`, options are `localhardhat`, `goerli_staging`, `base_staging`, `base_production`
 1. `source .env`
-2. For local deploy `forge script script/ProofOfUpiNFTV1Script.s.sol:ProofOfUpiNFTV1Script --fork-url http://localhost:8545 --broadcast`
+2. For local deploy, start your local chain and run `forge script script/ProofOfUpiNFTV1Script.s.sol:ProofOfUpiNFTV1Script --fork-url http://localhost:8545 --broadcast`
 3. For Goerli Staging `forge script script/ProofOfVenmoNFTV2.s.sol:ProofOfVenmoNFTV2Script --rpc-url $GOERLI_RPC_URL --broadcast --verify -vvvv`
-4. For Base Mainnet `forge script script/ProofOfVenmoNFTV2.s.sol:ProofOfVenmoNFTV2Script --rpc-url $BASE_RPC_URL --broadcast --etherscan-api-key $BASESCAN_API_KEY -vvvv`
+4. For Base Mainnet `forge script script/ProofOfVenmoNFTV2.s.sol:ProofOfVenmoNFTV2Script --rpc-url $GOERLI_RPC_URL --broadcast --etherscan-api-key $BASESCAN_API_KEY --verify -vvvv`
 
 ## Contracts
 
