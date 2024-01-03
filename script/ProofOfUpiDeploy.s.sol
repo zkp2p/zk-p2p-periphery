@@ -2,9 +2,9 @@
 pragma solidity ^0.8.13;
 
 import { Script, console2 } from "forge-std/Script.sol";
-import { ProofOfUpiNFTV1, IRampV2 } from "../src/ProofOfUpiNFTV1.sol";
+import { ProofOfP2PNFTV2, IRampV2 } from "../src/ProofOfP2PNFTV2.sol";
 
-contract ProofOfUpiNFTV1Script is Script {
+contract ProofOfUpiDeployScript is Script {
     function setUp() public {}
 
     function run() public {
@@ -33,7 +33,16 @@ contract ProofOfUpiNFTV1Script is Script {
         }
 
         // Deploy NFT
-        new ProofOfUpiNFTV1(ramp);
+        new ProofOfP2PNFTV2(
+            ramp,
+            "Proof of UPI-V1",
+            "PoUPI-V1",
+            "UPI",
+            "FF9933",
+            "FFFFFF",
+            "138808",
+            "138808"
+        );
 
         vm.stopBroadcast();
     }

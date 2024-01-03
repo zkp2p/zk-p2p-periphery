@@ -2,19 +2,21 @@
 pragma solidity ^0.8.13;
 
 import { ERC721ReadOnly } from "./external/ERC721ReadOnly.sol";
-import { IRampV2 } from "./interfaces/IRampV2.sol";
+import { IRamp } from "./interfaces/IRamp.sol";
 import { NFTDescriptorV2 } from "./lib/NFTDescriptorV2.sol";
 
-contract ProofOfUpiNFTV1 is ERC721ReadOnly {
+/// CHANGELOG:
+/// - Use NFTDescriptorV2
+contract ProofOfP2PNFTV2Venmo is ERC721ReadOnly {
 
     /* ============ State Variables ============ */
     uint256 public currentTokenId;
-    IRampV2 public ramp;
+    IRamp public ramp;
     mapping(address => uint256) internal addressToTokenId;
 
     /* ============ Constructor ============ */
 
-    constructor(IRampV2 _ramp) ERC721ReadOnly('Proof of UPI-V1', 'PoUPI-V1') {
+    constructor(IRamp _ramp) ERC721ReadOnly('Proof of Venmo-V2', 'PoP2P-V2') {
         ramp = _ramp;
     }
 
@@ -27,10 +29,10 @@ contract ProofOfUpiNFTV1 is ERC721ReadOnly {
      */
     function mintSBT() public returns (uint256) {
         // Read user ID from Ramp
-        IRampV2.AccountInfo memory accountInfo = ramp.getAccountInfo(msg.sender);
+        IRamp.AccountInfo memory accountInfo = ramp.getAccountInfo(msg.sender);
 
         // Check registration
-        require(accountInfo.idHash != bytes32(0), "Not registered");
+        require(accountInfo.venmoIdHash != bytes32(0), "Not registered");
 
         // Check NFT has not been minted for address
         // Note: tokenId starts at 1, so this check is valid
@@ -49,19 +51,19 @@ contract ProofOfUpiNFTV1 is ERC721ReadOnly {
 
     function tokenURI(uint256 tokenId) public view override returns (string memory) {
         address owner = ownerOf(tokenId);
-        IRampV2.AccountInfo memory accountInfo = ramp.getAccountInfo(owner);
+        IRamp.AccountInfo memory accountInfo = ramp.getAccountInfo(owner);
 
         return
             NFTDescriptorV2.constructTokenURI(
                 NFTDescriptorV2.ConstructTokenURIParams({
                     tokenId: tokenId,
-                    idHash: accountInfo.idHash,
+                    idHash: accountInfo.venmoIdHash,
                     owner: owner,
-                    platform: "UPI",
-                    color0: "FF9933",
-                    color1: "FFFFFF",
-                    color2: "138808",
-                    color3: "138808"
+                    platform: "Venmo",
+                    color0: "3B389D",
+                    color1: "F36D60",
+                    color2: "3F9347",
+                    color3: "721B78"
                 })
             );
     }
