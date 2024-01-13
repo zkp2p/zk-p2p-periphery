@@ -23,8 +23,8 @@ contract ProofOfUpiDeployScript is Script {
             // Goerli
             ramp = IRampV2(address(0x7eDD66B19A22293af86A2d96761FD7146BA3fF6c));
         } else if (deployIdentifierHash == keccak256(abi.encodePacked("base_staging"))) {
-            // Base staging TODO
-            ramp = IRampV2(address(1));
+            // Base staging
+            ramp = IRampV2(address(0xc137d22fa93316Df55b5F896F5180c722D02b01D));
         } else if (deployIdentifierHash == keccak256(abi.encodePacked("base_production"))) {
             // Base production TODO
             ramp = IRampV2(address(1));
