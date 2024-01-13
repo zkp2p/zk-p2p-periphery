@@ -22,8 +22,8 @@ contract ProofOfVenmoDeployScript is Script {
             // Goerli
             ramp = IRamp(address(0xfD04fb0538479ad70DFae539c875B2C180205012));
         } else if (deployIdentifierHash == keccak256(abi.encodePacked("base_staging"))) {
-            // Base staging TODO
-            ramp = IRamp(address(1));
+            // Base staging
+            ramp = IRamp(address(0x80e5aB2921e23192B2454f6a386Fd7032dad932E));
         } else if (deployIdentifierHash == keccak256(abi.encodePacked("base_production"))) {
             // Base production TODO
             ramp = IRamp(address(1));
