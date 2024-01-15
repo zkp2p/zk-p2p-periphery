@@ -19,14 +19,14 @@ contract ProofOfUpiDeployScript is Script {
         if (deployIdentifierHash == keccak256(abi.encodePacked("localhardhat"))) {
             // Hardhat
             ramp = IRampV2(address(0x0B306BF915C4d645ff596e518fAf3F9669b97016));
-        } else if (deployIdentifierHash == keccak256(abi.encodePacked("goerli_staging"))) {
-            // Goerli
-            ramp = IRampV2(address(0x7eDD66B19A22293af86A2d96761FD7146BA3fF6c));
+        } else if (deployIdentifierHash == keccak256(abi.encodePacked("sepolia_staging"))) {
+            // Sepolia
+            ramp = IRampV2(address(0xb4A7486b0EFa264D5FC6A8181bfc7A150cD57849));
         } else if (deployIdentifierHash == keccak256(abi.encodePacked("base_staging"))) {
             // Base staging
             ramp = IRampV2(address(0xc137d22fa93316Df55b5F896F5180c722D02b01D));
         } else if (deployIdentifierHash == keccak256(abi.encodePacked("base_production"))) {
-            // Base production TODO
+            // Base production
             ramp = IRampV2(address(1));
         } else {
             revert("Unsupported chain");
@@ -38,10 +38,10 @@ contract ProofOfUpiDeployScript is Script {
             "Proof of UPI-V1",
             "PoUPI-V1",
             "UPI",
-            "FF9933",
-            "FFFFFF",
-            "138808",
-            "138808"
+            "008080",
+            "00A693",
+            "FFD700",
+            "8E4585"
         );
 
         vm.stopBroadcast();

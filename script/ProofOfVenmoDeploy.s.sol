@@ -18,9 +18,9 @@ contract ProofOfVenmoDeployScript is Script {
         if (deployIdentifierHash == keccak256(abi.encodePacked("localhardhat"))) {
             // Hardhat
             ramp = IRamp(address(0xa85233C63b9Ee964Add6F2cffe00Fd84eb32338f));
-        } else if (deployIdentifierHash == keccak256(abi.encodePacked("goerli_staging"))) {
-            // Goerli
-            ramp = IRamp(address(0xfD04fb0538479ad70DFae539c875B2C180205012));
+        } else if (deployIdentifierHash == keccak256(abi.encodePacked("sepolia_staging"))) {
+            // Sepolia
+            ramp = IRamp(address(0x38637CD256d70994f2d5533BEAfe52eEfC2a96Ab));
         } else if (deployIdentifierHash == keccak256(abi.encodePacked("base_staging"))) {
             // Base staging
             ramp = IRamp(address(0x80e5aB2921e23192B2454f6a386Fd7032dad932E));

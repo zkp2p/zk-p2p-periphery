@@ -13,7 +13,7 @@
 2. For `DEPLOY_IDENTIFIER`, options are `localhardhat`, `goerli_staging`, `base_staging`, `base_production`
 1. `source .env`
 2. For local deploy, start your local chain and run `forge script script/ProofOfUpiDeploy.s.sol:ProofOfUpiDeployScript --fork-url http://localhost:8545 --broadcast`
-3. For Goerli Staging `forge script script/ProofOfVenmoDeploy.s.sol:ProofOfVenmoDeployScript --rpc-url $GOERLI_RPC_URL --broadcast --verify -vvvv`
+3. For Sepolia Staging `forge script script/ProofOfVenmoDeploy.s.sol:ProofOfVenmoDeployScript --rpc-url $SEPOLIA_RPC_URL --broadcast --verify -vvvv`
 4. For Base Mainnet `forge script script/ProofOfVenmoDeploy.s.sol:ProofOfVenmoDeployScript --rpc-url $BASE_RPC_URL --broadcast --etherscan-api-key $BASESCAN_API_KEY --verify -vvvv`
 
 ## Contracts
