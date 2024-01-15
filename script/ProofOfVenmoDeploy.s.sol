@@ -25,8 +25,8 @@ contract ProofOfVenmoDeployScript is Script {
             // Base staging
             ramp = IRamp(address(0x80e5aB2921e23192B2454f6a386Fd7032dad932E));
         } else if (deployIdentifierHash == keccak256(abi.encodePacked("base_production"))) {
-            // Base production TODO
-            ramp = IRamp(address(1));
+            // Base production
+            ramp = IRamp(address(0xbcE0B9e082F6619411dd8d029DFf8116BA36A76D));
         } else {
             revert("Unsupported chain");
         }

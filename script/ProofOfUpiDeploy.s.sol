@@ -27,7 +27,7 @@ contract ProofOfUpiDeployScript is Script {
             ramp = IRampV2(address(0xc137d22fa93316Df55b5F896F5180c722D02b01D));
         } else if (deployIdentifierHash == keccak256(abi.encodePacked("base_production"))) {
             // Base production
-            ramp = IRampV2(address(1));
+            ramp = IRampV2(address(0xf3c9a6CA0DF1950a62ea868704678b1e8C34918a));
         } else {
             revert("Unsupported chain");
         }
