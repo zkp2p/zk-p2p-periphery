@@ -4,7 +4,7 @@ pragma solidity ^0.8.13;
 import { Script, console2 } from "forge-std/Script.sol";
 import { ProofOfP2PNFTV2, IRampV2 } from "../src/ProofOfP2PNFTV2.sol";
 
-contract ProofOfUpiDeployScript is Script {
+contract ProofOfGarantiDeployScript is Script {
     function setUp() public {}
 
     function run() public {
@@ -18,16 +18,16 @@ contract ProofOfUpiDeployScript is Script {
         IRampV2 ramp;
         if (deployIdentifierHash == keccak256(abi.encodePacked("localhardhat"))) {
             // Hardhat
-            ramp = IRampV2(address(0x0B306BF915C4d645ff596e518fAf3F9669b97016));
+            ramp = IRampV2(address(0x9E545E3C0baAB3E08CdfD552C960A1050f373042));
         } else if (deployIdentifierHash == keccak256(abi.encodePacked("sepolia_staging"))) {
             // Sepolia
-            ramp = IRampV2(address(0));
+            ramp = IRampV2(address(0xEfBDf422FA81071A04D2f89A70A0D938FEFA0795));
         } else if (deployIdentifierHash == keccak256(abi.encodePacked("base_staging"))) {
-            // Base staging
+            // Base staging. Skip staging deploy
             ramp = IRampV2(address(0));
         } else if (deployIdentifierHash == keccak256(abi.encodePacked("base_production"))) {
             // Base production
-            ramp = IRampV2(address(0));
+            ramp = IRampV2(address(0x4Edc42B8925CF307C3DD5e7Fd9a3B04453A3e37d));
         } else {
             revert("Unsupported chain");
         }
