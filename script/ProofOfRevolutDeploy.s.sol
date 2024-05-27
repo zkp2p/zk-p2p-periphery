@@ -26,8 +26,8 @@ contract ProofOfRevolutDeployScript is Script {
             // Base staging
             accountRegistry = IAccountRegistry(address(0x44115b15Ff0Db10702DFC72Cb2fd3179215623df));
         } else if (deployIdentifierHash == keccak256(abi.encodePacked("base_production"))) {
-            // Base production: TODO
-            accountRegistry = IAccountRegistry(address(0));
+            // Base production
+            accountRegistry = IAccountRegistry(address(0x969FD0eD23A44756678af779FD0206aE123261B2));
         } else {
             revert("Unsupported chain");
         }
